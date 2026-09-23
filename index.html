@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-
+<meta charset="UTF-8" />
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
->
-
-<title>ひみつ ♡</title>
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+/>
+<title>♡ secret ♡</title>
 
 <style>
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
 
-html,
-body {
+html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -34,1418 +30,1037 @@ body {
         "Hiragino Sans",
         "Yu Gothic",
         sans-serif;
-
-    background: #07070c;
-    color: white;
+    background: #06060c;
+    color: #fff;
 }
 
-
-/* =========================================
+/* =========================
    BACKGROUND
-========================================= */
-
+========================= */
 .bg {
     position: fixed;
     inset: 0;
-
-    background:
-        radial-gradient(
-            circle at 20% 10%,
-            rgba(255, 61, 133, .20),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 85% 85%,
-            rgba(118, 82, 255, .20),
-            transparent 38%
-        ),
-        linear-gradient(
-            150deg,
-            #07070c,
-            #100b17,
-            #07070c
-        );
-
     overflow: hidden;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 70, 145, 0.18), transparent 33%),
+        radial-gradient(circle at 82% 78%, rgba(124, 88, 255, 0.18), transparent 35%),
+        linear-gradient(160deg, #06060c, #100c18 55%, #06060c);
+    z-index: 0;
 }
 
-.glow {
+.blur {
     position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .25;
+}
 
+.blur.one {
     width: 320px;
     height: 320px;
-
-    border-radius: 50%;
-
-    filter: blur(100px);
-
-    opacity: .24;
+    background: #ff4c93;
+    top: -120px;
+    left: -120px;
+    animation: float1 8s ease-in-out infinite alternate;
 }
 
-.glow.one {
-    background: #ff3f88;
-
-    top: -140px;
-    left: -130px;
-
-    animation: move1 8s ease-in-out infinite alternate;
-}
-
-.glow.two {
-    background: #795dff;
-
-    right: -160px;
+.blur.two {
+    width: 320px;
+    height: 320px;
+    background: #7d63ff;
     bottom: -130px;
-
-    animation: move2 9s ease-in-out infinite alternate;
+    right: -140px;
+    animation: float2 10s ease-in-out infinite alternate;
 }
 
-@keyframes move1 {
-    to {
-        transform: translate(70px, 90px) scale(1.2);
-    }
+@keyframes float1 {
+    to { transform: translate(70px, 80px) scale(1.2); }
 }
-
-@keyframes move2 {
-    to {
-        transform: translate(-70px, -70px) scale(1.2);
-    }
+@keyframes float2 {
+    to { transform: translate(-70px, -70px) scale(1.25); }
 }
-
-
-/* =========================================
-   STARS
-========================================= */
 
 .star {
     position: fixed;
-
     width: 3px;
     height: 3px;
-
-    border-radius: 50%;
-
     background: white;
-
-    opacity: .25;
-
+    border-radius: 50%;
+    opacity: .3;
     pointer-events: none;
-
     animation: blink var(--speed) ease-in-out infinite;
+    z-index: 1;
 }
 
 @keyframes blink {
-    0%,
-    100% {
-        opacity: .12;
-        transform: scale(.6);
-    }
-
-    50% {
-        opacity: .8;
-        transform: scale(1.6);
-    }
+    0%,100% { opacity: .12; transform: scale(.7); }
+    50% { opacity: .9; transform: scale(1.5); }
 }
 
+/* =========================
+   GENERAL
+========================= */
+.screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:
+        max(60px, env(safe-area-inset-top))
+        18px
+        max(34px, env(safe-area-inset-bottom));
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(.96);
+    transition:
+        opacity .8s ease,
+        transform .8s cubic-bezier(.2,.8,.2,1),
+        visibility .8s;
+}
 
-/* =========================================
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.wrap {
+    width: 100%;
+    max-width: 430px;
+    text-align: center;
+    position: relative;
+}
+
+/* =========================
    MUSIC BUTTON
-========================================= */
-
+========================= */
 #musicBtn {
     position: fixed;
-
-    top: max(17px, env(safe-area-inset-top));
-    right: 17px;
-
-    z-index: 100;
-
+    top: max(16px, env(safe-area-inset-top));
+    right: 16px;
+    z-index: 200;
     width: 46px;
     height: 46px;
-
     border-radius: 50%;
-
     border: 1px solid rgba(255,255,255,.12);
-
-    background: rgba(15,12,22,.65);
-
-    backdrop-filter: blur(15px);
-
+    background: rgba(15, 12, 21, .6);
+    backdrop-filter: blur(14px);
     color: white;
-
-    font-size: 19px;
-
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 #musicBtn.playing {
-    animation: musicPulse 1.5s ease-in-out infinite;
+    animation: musicPulse 1.6s ease-in-out infinite;
 }
 
 @keyframes musicPulse {
-    0%,
-    100% {
-        box-shadow: 0 0 0 0 rgba(255,80,145,.30);
-    }
-
-    50% {
-        box-shadow: 0 0 0 9px rgba(255,80,145,0);
-    }
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,80,150,.3); }
+    50% { box-shadow: 0 0 0 10px rgba(255,80,150,0); }
 }
 
-
-/* =========================================
-   SCREENS
-========================================= */
-
-.screen {
-    position: fixed;
-    inset: 0;
-
-    z-index: 10;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding:
-        max(65px, env(safe-area-inset-top))
-        25px
-        max(35px, env(safe-area-inset-bottom));
-
-    opacity: 0;
-    visibility: hidden;
-
-    transform: scale(.94);
-
-    transition:
-        opacity .7s ease,
-        transform .7s cubic-bezier(.2,.8,.2,1),
-        visibility .7s;
-}
-
-.screen.active {
-    opacity: 1;
-    visibility: visible;
-
-    transform: scale(1);
-}
-
-.center {
-    width: 100%;
-    max-width: 420px;
-
-    text-align: center;
-}
-
-
-/* =========================================
-   FIRST SCREEN
-========================================= */
-
-.secret-label {
-    margin-bottom: 35px;
-
+/* =========================
+   INTRO
+========================= */
+.small {
     font-size: 10px;
-
     letter-spacing: 6px;
-
     opacity: .28;
+    margin-bottom: 24px;
 }
 
-.open-heart {
+.bigHeart {
     position: relative;
-
     width: 130px;
     height: 130px;
-
-    margin:
-        0 auto
-        35px;
-
+    margin: 0 auto 28px;
     border-radius: 50%;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-    font-size: 53px;
-
+    font-size: 54px;
     border: 1px solid rgba(255,255,255,.11);
-
     background:
         linear-gradient(
             145deg,
             rgba(255,255,255,.12),
             rgba(255,255,255,.03)
         );
-
-    box-shadow:
-        0 18px 70px rgba(255,60,135,.17);
-
-    animation: floatHeart 1.8s ease-in-out infinite;
+    box-shadow: 0 18px 70px rgba(255, 60, 140, .18);
+    animation: floatHeart 2s ease-in-out infinite;
 }
 
-.open-heart::before,
-.open-heart::after {
+.bigHeart::before,
+.bigHeart::after {
     content: "";
-
     position: absolute;
-
     inset: -12px;
-
+    border: 1px solid rgba(255, 90, 160, .22);
     border-radius: 50%;
-
-    border:
-        1px solid rgba(255,80,150,.23);
-
-    animation: ring 2s ease-out infinite;
+    animation: ring 2.2s ease-out infinite;
 }
 
-.open-heart::after {
-    animation-delay: 1s;
+.bigHeart::after {
+    animation-delay: 1.1s;
 }
 
 @keyframes ring {
-    0% {
-        transform: scale(.7);
-        opacity: 0;
-    }
-
-    25% {
-        opacity: .7;
-    }
-
-    100% {
-        transform: scale(1.55);
-        opacity: 0;
-    }
+    0% { transform: scale(.72); opacity: 0; }
+    25% { opacity: .7; }
+    100% { transform: scale(1.55); opacity: 0; }
 }
-
 @keyframes floatHeart {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-9px);
-    }
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }
 
-.title {
-    font-size: clamp(29px, 8vw, 39px);
-
+.introTitle {
+    font-size: clamp(28px, 8vw, 40px);
     line-height: 1.5;
-
-    margin-bottom: 30px;
-}
-
-.open-btn {
-    width: 180px;
-    min-height: 57px;
-
-    border: 0;
-
-    border-radius: 999px;
-
-    color: white;
-
-    font-size: 16px;
+    margin-bottom: 12px;
     font-weight: 700;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff4a91,
-            #9c61ff
-        );
-
-    box-shadow:
-        0 15px 40px rgba(255,60,135,.24);
-
-    animation: buttonPulse 1.6s ease-in-out infinite;
 }
 
-@keyframes buttonPulse {
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.035);
-    }
+.introSub {
+    font-size: 13px;
+    opacity: .5;
 }
 
-
-/* =========================================
-   MESSAGE SCREEN
-========================================= */
-
-.big-heart {
-    font-size: 90px;
-
-    margin-bottom: 32px;
-
-    filter:
-        drop-shadow(
-            0 0 30px rgba(255,65,135,.35)
-        );
-
-    animation: heartbeat 1.2s ease-in-out infinite;
+/* =========================
+   PHOTO SCENE
+========================= */
+.photoArea {
+    position: relative;
+    width: 100%;
+    height: 470px;
+    margin-bottom: 18px;
 }
 
-@keyframes heartbeat {
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    15% {
-        transform: scale(1.13);
-    }
-
-    30% {
-        transform: scale(1);
-    }
-
-    45% {
-        transform: scale(1.07);
-    }
-
-    60% {
-        transform: scale(1);
-    }
+.line {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 2px;
+    height: 190px;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(255,255,255,.18),
+        transparent
+    );
+    opacity: .4;
 }
 
-.message {
-    font-size: clamp(31px, 9vw, 43px);
+.pulseHeart {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 34px;
+    z-index: 4;
+    animation: heartPulse 1.3s ease-in-out infinite;
+    filter: drop-shadow(0 0 18px rgba(255, 78, 150, .45));
+}
 
-    font-weight: 700;
+@keyframes heartPulse {
+    0%,100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.18); }
+}
 
-    line-height: 1.55;
+.photoCard {
+    position: absolute;
+    width: 160px;
+    height: 210px;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    box-shadow: 0 20px 50px rgba(0,0,0,.28);
+}
 
+.photoCard img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     opacity: 0;
-
-    transform: translateY(20px);
-
-    animation:
-        textIn
-        .8s
-        .2s
-        forwards;
+    transition: opacity .9s ease, transform 1.2s ease;
+    transform: scale(1.06);
 }
 
-@keyframes textIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.photoCard img.show {
+    opacity: 1;
+    transform: scale(1);
 }
 
+.photoCard.me {
+    left: 12px;
+    top: 30px;
+    transform: rotate(-7deg);
+    animation: meFloat 3.6s ease-in-out infinite;
+}
 
-/* =========================================
-   QUESTION CARD
-========================================= */
+.photoCard.she {
+    right: 12px;
+    bottom: 30px;
+    transform: rotate(7deg);
+    animation: sheFloat 3.8s ease-in-out infinite;
+}
 
+@keyframes meFloat {
+    0%,100% { transform: rotate(-7deg) translateY(0); }
+    50% { transform: rotate(-5deg) translateY(-10px); }
+}
+@keyframes sheFloat {
+    0%,100% { transform: rotate(7deg) translateY(0); }
+    50% { transform: rotate(5deg) translateY(-10px); }
+}
+
+.nameTag {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    z-index: 4;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(10, 10, 18, .48);
+    backdrop-filter: blur(10px);
+    font-size: 12px;
+    letter-spacing: .04em;
+    border: 1px solid rgba(255,255,255,.1);
+}
+
+.me .nameTag { content: ""; }
+.she .nameTag { content: ""; }
+
+.miniText {
+    font-size: clamp(28px, 8vw, 40px);
+    line-height: 1.55;
+    font-weight: 700;
+    min-height: 100px;
+}
+
+.miniText small {
+    display: block;
+    font-size: 14px;
+    margin-top: 8px;
+    opacity: .5;
+    font-weight: 500;
+}
+
+/* =========================
+   QUESTION
+========================= */
 .card {
     width: 100%;
-
-    padding:
-        40px
-        23px
-        25px;
-
+    padding: 34px 20px 24px;
     border-radius: 30px;
-
-    border: 1px solid rgba(255,255,255,.10);
-
+    border: 1px solid rgba(255,255,255,.11);
     background:
         linear-gradient(
             145deg,
             rgba(255,255,255,.10),
             rgba(255,255,255,.03)
         );
-
     backdrop-filter: blur(20px);
-
-    box-shadow:
-        0 25px 80px rgba(0,0,0,.32);
+    box-shadow: 0 25px 85px rgba(0,0,0,.32);
+    position: relative;
+    overflow: hidden;
 }
 
-.question-heart {
+.card::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    top: -95px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: rgba(255, 70, 145, .12);
+    filter: blur(65px);
+}
+
+.qHeart {
     font-size: 42px;
-
-    margin-bottom: 19px;
-
-    animation: heartbeat 1.2s infinite;
+    margin-bottom: 18px;
+    animation: heartPulse 1.3s ease-in-out infinite;
 }
 
 .question {
-    font-size: clamp(27px, 8vw, 37px);
-
+    font-size: clamp(28px, 8vw, 38px);
+    line-height: 1.6;
     font-weight: 700;
-
-    line-height: 1.55;
-
-    margin-bottom: 34px;
-}
-
-
-/* =========================================
-   BUTTON AREA
-========================================= */
-
-.button-zone {
+    margin-bottom: 26px;
     position: relative;
-
-    width: 100%;
-    height: 140px;
+    z-index: 2;
 }
 
-
-/* YES */
-
-#yesBtn {
-    position: absolute;
-
-    left: 50%;
-    top: 0;
-
-    transform: translateX(-50%);
-
+.previewRow {
+    position: relative;
     width: 100%;
+    height: 95px;
+    margin-bottom: 18px;
+}
 
-    height: 58px;
-
-    border: 0;
-
+.previewPic {
+    position: absolute;
+    top: 0;
+    width: 74px;
+    height: 94px;
     border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.11);
+    box-shadow: 0 10px 35px rgba(0,0,0,.22);
+    background: rgba(255,255,255,.05);
+}
 
-    color: white;
+.previewPic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    font-size: 17px;
-    font-weight: 700;
+.previewPic.left {
+    left: 18%;
+    transform: rotate(-8deg);
+}
 
-    background:
-        linear-gradient(
-            135deg,
-            #ff478e,
-            #9d5fff
-        );
+.previewPic.right {
+    right: 18%;
+    transform: rotate(8deg);
+}
 
-    box-shadow:
-        0 14px 35px rgba(255,55,130,.20);
+.previewHeart {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+}
 
+.buttonZone {
+    position: relative;
+    width: 100%;
+    height: 138px;
     z-index: 5;
 }
 
-#yesBtn:active {
-    transform:
-        translateX(-50%)
-        scale(.96);
+#yesBtn {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 58px;
+    border: 0;
+    border-radius: 18px;
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff488d, #9f5fff);
+    box-shadow: 0 14px 35px rgba(255, 60, 130, .22);
 }
 
-
-/* NO */
+#yesBtn:active {
+    transform: translateX(-50%) scale(.97);
+}
 
 #noBtn {
     position: absolute;
-
-    width: 115px;
+    width: 118px;
     height: 48px;
-
     left: 50%;
     top: 78px;
-
     transform: translateX(-50%);
-
     border-radius: 15px;
-
-    border: 1px solid rgba(255,255,255,.10);
-
-    background: rgba(255,255,255,.055);
-
-    color: rgba(255,255,255,.66);
-
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.72);
     font-size: 14px;
-
     transition:
         left .18s cubic-bezier(.2,.9,.3,1),
         top .18s cubic-bezier(.2,.9,.3,1),
         transform .18s ease;
-
-    z-index: 6;
-
-    touch-action: none;
 }
 
-
-/* =========================================
-   RESULT
-========================================= */
-
-.result-heart {
-    font-size: 90px;
-
-    margin-bottom: 28px;
-
-    animation: winHeart .65s ease-in-out infinite;
+/* =========================
+   YES RESULT
+========================= */
+.resultPics {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    margin-bottom: 16px;
 }
 
-@keyframes winHeart {
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.15);
-    }
+.resultPic {
+    position: absolute;
+    top: 40px;
+    width: 140px;
+    height: 180px;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 18px 50px rgba(0,0,0,.28);
+    animation: resultFloat 2.5s ease-in-out infinite;
 }
 
-.result-title {
-    font-size: clamp(32px, 9vw, 44px);
+.resultPic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    font-weight: 700;
+.resultPic.left {
+    left: 36px;
+    transform: rotate(-8deg);
+}
 
+.resultPic.right {
+    right: 36px;
+    transform: rotate(8deg);
+    animation-delay: .2s;
+}
+
+@keyframes resultFloat {
+    0%,100% { translate: 0 0; }
+    50% { translate: 0 -8px; }
+}
+
+.resultCenterHeart {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 44px;
+    filter: drop-shadow(0 0 24px rgba(255, 80, 140, .4));
+    animation: boomHeart .8s ease-in-out infinite;
+}
+
+@keyframes boomHeart {
+    0%,100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.18); }
+}
+
+.resultTitle {
+    font-size: clamp(31px, 9vw, 42px);
     line-height: 1.5;
+    font-weight: 700;
 }
 
-.result-sub {
-    margin-top: 12px;
-
-    font-size: 17px;
-
-    opacity: .55;
+.resultSub {
+    margin-top: 10px;
+    font-size: 16px;
+    opacity: .58;
 }
 
-
-/* =========================================
-   PARTICLES
-========================================= */
-
+/* =========================
+   PARTICLES / FLASH
+========================= */
 .particle {
     position: fixed;
-
-    z-index: 500;
-
     left: var(--left);
     top: var(--top);
-
+    z-index: 500;
     font-size: var(--size);
-
     pointer-events: none;
-
-    animation:
-        fly
-        var(--time)
-        cubic-bezier(.12,.7,.2,1)
-        forwards;
+    animation: fly var(--time) cubic-bezier(.12,.7,.2,1) forwards;
 }
 
 @keyframes fly {
     0% {
         opacity: 0;
-
-        transform:
-            translate(-50%,-50%)
-            scale(.3)
-            rotate(0deg);
+        transform: translate(-50%, -50%) scale(.3) rotate(0deg);
     }
-
-    12% {
-        opacity: 1;
-    }
-
+    12% { opacity: 1; }
     100% {
         opacity: 0;
-
         transform:
             translate(
                 calc(-50% + var(--x)),
                 calc(-50% + var(--y))
             )
-            scale(1.4)
+            scale(1.45)
             rotate(var(--rotate));
     }
 }
 
+.flash {
+    position: fixed;
+    inset: 0;
+    z-index: 450;
+    pointer-events: none;
+    opacity: 0;
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 120, 180, .34),
+            rgba(255, 70, 150, .08) 35%,
+            transparent 70%
+        );
+}
 
-/* =========================================
-   PHONE HEIGHT
-========================================= */
+.flash.show {
+    animation: flashAnim .65s ease-out;
+}
 
-@media (max-height: 650px) {
-    .open-heart {
-        width: 100px;
-        height: 100px;
+@keyframes flashAnim {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    100% { opacity: 0; }
+}
 
-        font-size: 43px;
-
-        margin-bottom: 22px;
+@media (max-height: 720px) {
+    .photoArea {
+        height: 420px;
     }
 
-    .big-heart {
-        font-size: 70px;
-
-        margin-bottom: 22px;
+    .photoCard {
+        width: 145px;
+        height: 190px;
     }
 
-    .card {
-        padding:
-            28px
-            20px
-            20px;
+    .bigHeart {
+        width: 110px;
+        height: 110px;
+        font-size: 44px;
     }
 
-    .question {
-        margin-bottom: 20px;
+    .resultPic {
+        width: 120px;
+        height: 156px;
+        top: 54px;
     }
 }
 
 </style>
 </head>
-
-
 <body>
 
-
 <div class="bg">
-    <div class="glow one"></div>
-    <div class="glow two"></div>
+    <div class="blur one"></div>
+    <div class="blur two"></div>
 </div>
 
+<div class="flash" id="flash"></div>
 
 <audio
     id="music"
     src="music.mp3"
+    autoplay
+    preload="auto"
     loop
-    preload="auto">
+    playsinline>
 </audio>
 
+<button id="musicBtn">♪</button>
 
-<button id="musicBtn">
-    ♪
-</button>
-
-
-
-<!-- =====================================
-     INTRO
-===================================== -->
-
-<section
-    class="screen active"
-    id="screen0">
-
-    <div class="center">
-
-        <div class="secret-label">
-            SECRET
-        </div>
-
-
-        <div class="open-heart">
-            ♡
-        </div>
-
-
-        <div class="title">
-            ひみつがあるよ…
-        </div>
-
-
-        <button
-            class="open-btn"
-            onclick="start(event)">
-
-            あける ♡
-        </button>
-
+<!-- INTRO -->
+<section class="screen active" id="screen0">
+    <div class="wrap">
+        <div class="small">SECRET</div>
+        <div class="bigHeart">♡</div>
+        <div class="introTitle">ひみつがあるよ…</div>
+        <div class="introSub">just a sec ♡</div>
     </div>
-
 </section>
 
+<!-- PHOTO SCENE -->
+<section class="screen" id="screen1">
+    <div class="wrap">
+        <div class="photoArea">
+            <div class="line"></div>
+            <div class="pulseHeart">♡</div>
 
-
-<!-- =====================================
-     SHORT MESSAGE
-===================================== -->
-
-<section
-    class="screen"
-    id="screen1">
-
-    <div class="center">
-
-        <div class="big-heart">
-            ♡
-        </div>
-
-        <div class="message">
-            きみが
-            <br>
-            すき。
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================
-     QUESTION
-===================================== -->
-
-<section
-    class="screen"
-    id="screen2">
-
-    <div class="center">
-
-        <div class="card">
-
-            <div class="question-heart">
-                ♡
+            <div class="photoCard me">
+                <img id="meA" class="show" src="pics/me1.png" alt="">
+                <img id="meB" src="pics/me2.png" alt="">
+                <div class="nameTag">you</div>
             </div>
 
+            <div class="photoCard she">
+                <img id="sheA" class="show" src="pics/she1.png" alt="">
+                <img id="sheB" src="pics/she2.png" alt="">
+                <div class="nameTag">her</div>
+            </div>
+        </div>
+
+        <div class="miniText" id="sceneText">
+            きみが<br>すき。
+            <small>♡</small>
+        </div>
+    </div>
+</section>
+
+<!-- QUESTION -->
+<section class="screen" id="screen2">
+    <div class="wrap">
+        <div class="card">
+            <div class="qHeart">♡</div>
+
+            <div class="previewRow">
+                <div class="previewPic left">
+                    <img src="pics/me2.png" alt="">
+                </div>
+                <div class="previewHeart">♡</div>
+                <div class="previewPic right">
+                    <img src="pics/she2.png" alt="">
+                </div>
+            </div>
 
             <div class="question">
-                ぼくの
-                <br>
-                かのじょに
-                <br>
+                ぼくの<br>
+                かのじょに<br>
                 なってくれる？
             </div>
 
-
-            <div
-                class="button-zone"
-                id="buttonZone">
-
-
-                <button
-                    id="yesBtn"
-                    onclick="yesAnswer(event)">
-
-                    はい ♡
-                </button>
-
-
-                <button
-                    id="noBtn">
-
-                    いいえ
-                </button>
-
+            <div class="buttonZone" id="buttonZone">
+                <button id="yesBtn">はい ♡</button>
+                <button id="noBtn">いいえ</button>
             </div>
-
         </div>
-
     </div>
-
 </section>
 
-
-
-<!-- =====================================
-     YES RESULT
-===================================== -->
-
-<section
-    class="screen"
-    id="screen3">
-
-    <div class="center">
-
-        <div class="result-heart">
-            ❤️
+<!-- RESULT -->
+<section class="screen" id="screen3">
+    <div class="wrap">
+        <div class="resultPics">
+            <div class="resultPic left">
+                <img src="pics/me3.png" alt="">
+            </div>
+            <div class="resultCenterHeart">❤️</div>
+            <div class="resultPic right">
+                <img src="pics/she3.png" alt="">
+            </div>
         </div>
 
-        <div class="result-title">
-            ほんとう？🥹
-            <br>
-            うれしい！
+        <div class="resultTitle">
+            やった！<br>
+            うれしい！♡
         </div>
 
-        <div class="result-sub">
-            だいすき ♡
+        <div class="resultSub">
+            ありがとう ♡
         </div>
-
     </div>
-
 </section>
-
-
 
 <script>
+/* =========================
+   IMAGE PATHS
+========================= */
+const myPics = [
+    "pics/me1.png",
+    "pics/me2.png",
+    "pics/me3.png",
+    "pics/me4.png"
+];
 
-const music =
-    document.getElementById("music");
+const herPics = [
+    "pics/she1.png",
+    "pics/she2.png",
+    "pics/she3.png",
+    "pics/she4.png"
+];
 
-const musicBtn =
-    document.getElementById("musicBtn");
+/* =========================
+   ELEMENTS
+========================= */
+const music = document.getElementById("music");
+const musicBtn = document.getElementById("musicBtn");
 
-const noBtn =
-    document.getElementById("noBtn");
+const screens = [
+    document.getElementById("screen0"),
+    document.getElementById("screen1"),
+    document.getElementById("screen2"),
+    document.getElementById("screen3")
+];
 
-const zone =
-    document.getElementById("buttonZone");
+const meA = document.getElementById("meA");
+const meB = document.getElementById("meB");
+const sheA = document.getElementById("sheA");
+const sheB = document.getElementById("sheB");
+const flash = document.getElementById("flash");
+const sceneText = document.getElementById("sceneText");
 
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const zone = document.getElementById("buttonZone");
 
 let currentScreen = 0;
-
 let noAttempts = 0;
 
+let meFront = true;
+let sheFront = true;
+let meIndex = 0;
+let sheIndex = 0;
 
-/* =========================================
+/* =========================
    STARS
-========================================= */
-
-for (let i = 0; i < 35; i++) {
-
-    const star =
-        document.createElement("div");
-
-    star.className =
-        "star";
-
-    star.style.left =
-        Math.random() * 100 + "vw";
-
-    star.style.top =
-        Math.random() * 100 + "vh";
-
-    star.style.setProperty(
-        "--speed",
-        (
-            1.5 +
-            Math.random() * 3
-        ) + "s"
-    );
-
+========================= */
+for (let i = 0; i < 36; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.left = Math.random() * 100 + "vw";
+    star.style.top = Math.random() * 100 + "vh";
+    star.style.setProperty("--speed", (1.4 + Math.random() * 3) + "s");
     document.body.appendChild(star);
 }
 
-
-/* =========================================
+/* =========================
    MUSIC
-========================================= */
-
-music.volume = 0.55;
-
-
-/*
-   Try autoplay first.
-*/
-window.addEventListener(
-    "load",
-    async () => {
-
-        try {
-
-            await music.play();
-
-            setMusicUI(true);
-
-        }
-        catch (e) {
-
-            setMusicUI(false);
-
-        }
-
-    }
-);
-
+========================= */
+music.volume = 0.65;
 
 function setMusicUI(playing) {
-
     if (playing) {
-
         musicBtn.textContent = "♫";
-
-        musicBtn.classList.add(
-            "playing"
-        );
-
-    }
-
-    else {
-
+        musicBtn.classList.add("playing");
+    } else {
         musicBtn.textContent = "♪";
-
-        musicBtn.classList.remove(
-            "playing"
-        );
-
+        musicBtn.classList.remove("playing");
     }
-
 }
 
-
-musicBtn.addEventListener(
-    "click",
-    async event => {
-
-        event.stopPropagation();
-
-
-        if (music.paused) {
-
-            try {
-
-                await music.play();
-
-                setMusicUI(true);
-
-            }
-
-            catch (e) {}
-
-        }
-
-        else {
-
-            music.pause();
-
-            setMusicUI(false);
-
-        }
-
+async function tryStartMusic() {
+    try {
+        await music.play();
+        setMusicUI(true);
+    } catch (e) {
+        setMusicUI(false);
     }
-);
+}
 
+tryStartMusic();
+window.addEventListener("load", tryStartMusic);
+window.addEventListener("pageshow", tryStartMusic);
 
-/* =========================================
-   START
-========================================= */
+document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && music.paused) {
+        tryStartMusic();
+    }
+});
 
-async function start(event) {
-
-    event.stopPropagation();
-
-
-    /*
-       This interaction unlocks audio
-       on iPhone/Android.
-    */
-
+document.addEventListener("pointerdown", async () => {
     if (music.paused) {
-
-        try {
-
-            await music.play();
-
-            setMusicUI(true);
-
-        }
-
-        catch (e) {}
-
+        tryStartMusic();
     }
+}, { once: true });
 
+musicBtn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    if (music.paused) {
+        try {
+            await music.play();
+            setMusicUI(true);
+        } catch (e) {}
+    } else {
+        music.pause();
+        setMusicUI(false);
+    }
+});
 
-    burst(
-        window.innerWidth / 2,
-        window.innerHeight / 2,
-        14
-    );
+/* =========================
+   SCREEN FLOW
+========================= */
+function showScreen(index) {
+    screens[currentScreen].classList.remove("active");
+    currentScreen = index;
 
+    setTimeout(() => {
+        screens[currentScreen].classList.add("active");
+    }, 200);
+}
 
+setTimeout(() => {
     showScreen(1);
+    startPhotoShow();
+}, 1800);
 
+setTimeout(() => {
+    showScreen(2);
+    burst(window.innerWidth / 2, window.innerHeight / 2, 24);
+}, 8500);
 
-    /*
-       Automatically move to question.
-       She doesn't need to tap again.
-    */
-
-    setTimeout(() => {
-
-        showScreen(2);
-
-    }, 2600);
-
+/* =========================
+   PHOTO ANIMATION
+========================= */
+function swapPhoto(frontImg, backImg, list, currentIndexRefGetter, currentIndexRefSetter) {
+    let idx = currentIndexRefGetter();
+    idx = (idx + 1) % list.length;
+    backImg.src = list[idx];
+    backImg.classList.add("show");
+    frontImg.classList.remove("show");
+    currentIndexRefSetter(idx);
 }
 
-
-/* =========================================
-   SCREEN CHANGE
-========================================= */
-
-function showScreen(number) {
-
-    document
-        .getElementById(
-            "screen" + currentScreen
-        )
-        .classList
-        .remove("active");
-
-
-    currentScreen =
-        number;
-
-
-    setTimeout(() => {
-
-        document
-            .getElementById(
-                "screen" + currentScreen
-            )
-            .classList
-            .add("active");
-
-    }, 250);
-
+function nextMe() {
+    if (meFront) {
+        swapPhoto(meA, meB, myPics, () => meIndex, (v) => meIndex = v);
+    } else {
+        swapPhoto(meB, meA, myPics, () => meIndex, (v) => meIndex = v);
+    }
+    meFront = !meFront;
 }
 
+function nextShe() {
+    if (sheFront) {
+        swapPhoto(sheA, sheB, herPics, () => sheIndex, (v) => sheIndex = v);
+    } else {
+        swapPhoto(sheB, sheA, herPics, () => sheIndex, (v) => sheIndex = v);
+    }
+    sheFront = !sheFront;
+}
 
-/* =========================================
-   NO BUTTON 😂
-========================================= */
+function startPhotoShow() {
+    setTimeout(() => {
+        sceneText.innerHTML = `きみが<br>すき。<small>♡</small>`;
+    }, 300);
 
-const noMessages = [
+    setTimeout(() => {
+        nextMe();
+        nextShe();
+        burst(window.innerWidth * 0.32, window.innerHeight * 0.42, 10);
+        burst(window.innerWidth * 0.68, window.innerHeight * 0.58, 10);
+    }, 1600);
+
+    setTimeout(() => {
+        sceneText.innerHTML = `もっと<br>はなしたい。<small>♡</small>`;
+    }, 3000);
+
+    setTimeout(() => {
+        nextMe();
+        nextShe();
+        burst(window.innerWidth / 2, window.innerHeight / 2, 18);
+        flashBoom();
+    }, 4300);
+
+    setTimeout(() => {
+        sceneText.innerHTML = `ずっと<br>いっしょに？<small>♡</small>`;
+    }, 5600);
+
+    const photoLoop = setInterval(() => {
+        if (currentScreen !== 1) {
+            clearInterval(photoLoop);
+            return;
+        }
+        nextMe();
+        setTimeout(nextShe, 350);
+    }, 1700);
+}
+
+/* =========================
+   MOVING NO BUTTON
+========================= */
+const noTexts = [
     "いいえ",
     "え？😂",
-    "だめ 😌",
+    "だめ",
     "むり 😂",
-    "ほんと？",
-    "にげるよ ♡"
+    "no no",
+    "にげる"
 ];
 
-
 function moveNoButton() {
-
     noAttempts++;
+    noBtn.textContent = noTexts[Math.min(noAttempts, noTexts.length - 1)];
 
+    const zoneRect = zone.getBoundingClientRect();
+    const buttonWidth = noBtn.offsetWidth;
+    const buttonHeight = noBtn.offsetHeight;
 
-    /*
-       Change message after each attempt
-    */
+    const maxX = zoneRect.width - buttonWidth;
+    const minY = 68;
+    const maxY = zoneRect.height - buttonHeight;
 
-    noBtn.textContent =
-        noMessages[
-            Math.min(
-                noAttempts,
-                noMessages.length - 1
-            )
-        ];
+    const x = Math.random() * maxX;
+    const y = minY + Math.random() * Math.max(1, maxY - minY);
 
-
-    const zoneRect =
-        zone.getBoundingClientRect();
-
-
-    const buttonWidth =
-        noBtn.offsetWidth;
-
-    const buttonHeight =
-        noBtn.offsetHeight;
-
-
-    /*
-       Keep it inside button zone.
-    */
-
-    const maxX =
-        zoneRect.width -
-        buttonWidth;
-
-
-    const minY =
-        66;
-
-
-    const maxY =
-        zoneRect.height -
-        buttonHeight;
-
-
-    let x =
-        Math.random() * maxX;
-
-
-    let y =
-        minY +
-        Math.random() *
-        Math.max(
-            1,
-            maxY - minY
-        );
-
-
-    noBtn.style.transform =
-        "translateX(0)";
-
-
-    noBtn.style.left =
-        x + "px";
-
-
-    noBtn.style.top =
-        y + "px";
-
-
-    /*
-       Small vibration if supported.
-    */
-
-    if (navigator.vibrate) {
-
-        navigator.vibrate(25);
-
-    }
-
-}
-
-
-/*
-   DESKTOP:
-   move when cursor gets over button.
-*/
-
-noBtn.addEventListener(
-    "mouseenter",
-    moveNoButton
-);
-
-
-/*
-   PHONE:
-   move instantly when finger touches.
-*/
-
-noBtn.addEventListener(
-    "touchstart",
-    event => {
-
-        event.preventDefault();
-
-        event.stopPropagation();
-
-        moveNoButton();
-
-    },
-    {
-        passive: false
-    }
-);
-
-
-/*
-   Extra protection:
-   even if she somehow clicks it,
-   don't accept it 😂
-*/
-
-noBtn.addEventListener(
-    "click",
-    event => {
-
-        event.preventDefault();
-
-        event.stopPropagation();
-
-        moveNoButton();
-
-    }
-);
-
-
-/* =========================================
-   YES
-========================================= */
-
-function yesAnswer(event) {
-
-    event.stopPropagation();
-
-
-    if (navigator.vibrate) {
-
-        navigator.vibrate(
-            [60, 40, 100]
-        );
-
-    }
-
+    noBtn.style.transform = "translateX(0)";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
 
     burst(
-        window.innerWidth / 2,
-        window.innerHeight / 2,
-        55
+        zoneRect.left + x + buttonWidth / 2,
+        zoneRect.top + y + buttonHeight / 2,
+        6
     );
 
+    if (navigator.vibrate) {
+        navigator.vibrate(20);
+    }
+}
 
+noBtn.addEventListener("mouseenter", moveNoButton);
+noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    moveNoButton();
+}, { passive: false });
+noBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    moveNoButton();
+});
+
+yesBtn.addEventListener("click", () => {
+    flashBoom();
+    burst(window.innerWidth / 2, window.innerHeight / 2, 58);
     showScreen(3);
 
-
-    setTimeout(() => {
-
-        burst(
-            window.innerWidth / 2,
-            window.innerHeight / 2,
-            45
-        );
-
-    }, 650);
-
-
-    setTimeout(() => {
-
-        burst(
-            window.innerWidth / 2,
-            window.innerHeight / 2,
-            35
-        );
-
-    }, 1400);
-
-}
-
-
-/* =========================================
-   HEART PARTICLES
-========================================= */
-
-function burst(x, y, amount) {
-
-    const symbols = [
-        "♡",
-        "♥",
-        "❤",
-        "♡",
-        "✦",
-        "♡"
-    ];
-
-
-    for (
-        let i = 0;
-        i < amount;
-        i++
-    ) {
-
-        setTimeout(() => {
-
-            const p =
-                document.createElement(
-                    "div"
-                );
-
-
-            p.className =
-                "particle";
-
-
-            p.textContent =
-                symbols[
-                    Math.floor(
-                        Math.random() *
-                        symbols.length
-                    )
-                ];
-
-
-            const angle =
-                Math.random() *
-                Math.PI *
-                2;
-
-
-            const distance =
-                80 +
-                Math.random() *
-                320;
-
-
-            const dx =
-                Math.cos(angle) *
-                distance;
-
-
-            const dy =
-                Math.sin(angle) *
-                distance;
-
-
-            p.style.setProperty(
-                "--left",
-                x + "px"
-            );
-
-
-            p.style.setProperty(
-                "--top",
-                y + "px"
-            );
-
-
-            p.style.setProperty(
-                "--x",
-                dx + "px"
-            );
-
-
-            p.style.setProperty(
-                "--y",
-                dy + "px"
-            );
-
-
-            p.style.setProperty(
-                "--size",
-                (
-                    13 +
-                    Math.random() *
-                    25
-                ) + "px"
-            );
-
-
-            p.style.setProperty(
-                "--rotate",
-                (
-                    -120 +
-                    Math.random() *
-                    240
-                ) + "deg"
-            );
-
-
-            p.style.setProperty(
-                "--time",
-                (
-                    1.5 +
-                    Math.random() *
-                    1.5
-                ) + "s"
-            );
-
-
-            document.body.appendChild(p);
-
-
-            setTimeout(() => {
-
-                p.remove();
-
-            }, 3500);
-
-
-        }, i * 18);
-
+    if (navigator.vibrate) {
+        navigator.vibrate([70, 40, 110]);
     }
 
+    setTimeout(() => burst(window.innerWidth / 2, window.innerHeight / 2, 48), 600);
+    setTimeout(() => burst(window.innerWidth / 2, window.innerHeight / 2, 38), 1300);
+});
+
+/* =========================
+   PARTICLES
+========================= */
+function burst(x, y, amount) {
+    const chars = ["♡", "♥", "❤", "✦", "♡", "♡"];
+
+    for (let i = 0; i < amount; i++) {
+        setTimeout(() => {
+            const p = document.createElement("div");
+            p.className = "particle";
+            p.textContent = chars[Math.floor(Math.random() * chars.length)];
+
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 60 + Math.random() * 270;
+            const dx = Math.cos(angle) * dist;
+            const dy = Math.sin(angle) * dist;
+
+            p.style.setProperty("--left", x + "px");
+            p.style.setProperty("--top", y + "px");
+            p.style.setProperty("--x", dx + "px");
+            p.style.setProperty("--y", dy + "px");
+            p.style.setProperty("--size", (13 + Math.random() * 24) + "px");
+            p.style.setProperty("--rotate", (-120 + Math.random() * 240) + "deg");
+            p.style.setProperty("--time", (1.4 + Math.random() * 1.4) + "s");
+
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 3200);
+        }, i * 16);
+    }
 }
 
+function flashBoom() {
+    flash.classList.remove("show");
+    void flash.offsetWidth;
+    flash.classList.add("show");
+}
 </script>
 
 </body>
